@@ -12,26 +12,36 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Build Bundle (spaces-renamer target)
+    - name: Set Deployment Target
+      run: |
+        /usr/bin/xcrun xcodebuild -project spaces-renamer.xcodeproj \
+          -target spaces-renamer \
+          -configuration Release \
+          MACOSX_DEPLOYMENT_TARGET=11.0 \
+          build
+
+    - name: Build Bundle (spaces-renamer)
       run: |
         xcodebuild build \
           -project spaces-renamer.xcodeproj \
           -scheme spaces-renamer \
           -configuration Release \
-          -destination 'platform=macOS'
+          -destination 'platform=macOS' \
+          MACOSX_DEPLOYMENT_TARGET=11.0
 
-    - name: Build App (SpacesRenamer target)
+    - name: Build App (SpacesRenamer)
       run: |
         xcodebuild build \
           -project spaces-renamer.xcodeproj \
           -scheme SpacesRenamer \
           -configuration Release \
-          -destination 'platform=macOS'
+          -destination 'platform=macOS' \
+          MACOSX_DEPLOYMENT_TARGET=11.0
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: Built Products
+        name: Built-Products-Tahoe
         path: |
-          build/Release/spaces-renamer.bundle
-          build/Release/SpacesRenamer.app
+          ~/Library/Developer/Xcode/DerivedData/**/Build/Products/Release/spaces-renamer.bundle
+          ~/Library/Developer/Xcode/DerivedData/**/Build/Products/Release/SpacesRenamer.app
